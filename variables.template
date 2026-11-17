@@ -1,0 +1,183 @@
+# Airlock IAM Salesdemo - instance settings: all keys
+#
+# Encrypted copy as variables.auto.tfvars, then fill in the values with 'sops edit' (see README.md):
+#   cat variables.template | sops encrypt --filename-override variables.auto.tfvars > variables.auto.tfvars
+# Required keys are marked [required]; all others are optional - remove them to use the default.
+
+# ==============================================================================
+# Demo environment
+# ==============================================================================
+
+# [required] Instance name: lowercase letters, digits and '-', max. 32 characters.
+# Used for the VM, the cluster and cloud resource names.
+demo_name = ""
+
+# [required] Host name of the demo, e.g. "demo.example.com". All URLs use it
+# (https://<fqdn>/auth-login/, /auth-admin/, ...). Passkeys are bound to it - changing it later
+# invalidates registered passkeys.
+demo_fqdn = ""
+
+# ==============================================================================
+# TLS certificate of the gateway
+# ==============================================================================
+
+# "internal" (default): certificate from the cluster-internal CA (browser warning, CA can be imported)
+# "letsencrypt": Let's Encrypt via HTTP-01 - requires public DNS for demo_fqdn and port 80
+# reachable from the internet
+tls_issuer = "internal"
+
+# E-mail address for the Let's Encrypt account (optional, only with tls_issuer = "letsencrypt")
+tls_acme_email = ""
+
+# ==============================================================================
+# Secrets
+# ==============================================================================
+
+# [required] Passphrase for the encryption of the OpenTofu state (state/), min. 16 characters.
+# Never change or lose it - the state can't be read without it.
+# e.g. openssl rand -base64 32
+sec_state_passphrase = ""
+
+# [required] Secret from which the keys protecting data in the IAM database are derived (Airlock
+# 2FA storage encryption, OATH OTP secrets, new-device cookie), min. 32 characters.
+# Never change or lose it - a database backup is only usable with the same value.
+# e.g. openssl rand -base64 48
+sec_data_key = ""
+
+# [required] Initial password of the IAM administrators "admin" (login on the Loginapp, then
+# portal entry Adminapp) and "emergency"; only used when they are created at the first start
+sec_password_iam = ""
+
+# ArgoCD password of the built-in user "admin" (only usable with argocd-cli; the web UI uses the
+# IAM login); empty: generated
+sec_password_argocd = ""
+
+# ==============================================================================
+# VM
+# ==============================================================================
+
+# Timezone of the VM and IAM, default "Europe/Zurich"
+vm_timezone = ""
+
+# IP addresses or CIDR ranges allowed to access the Talos and Kubernetes API and the Adminapp
+# of local administrators on port 8443, e.g. ["203.0.113.10", "198.51.100.0/24"].
+# [required] on cloud platforms (azure); empty: no restriction on port 8443
+vm_admin_ips = []
+
+# NTP servers, default ["pool.ntp.org", "time.cloudflare.com"]
+vm_ntp_servers = []
+
+# ==============================================================================
+# Platform - set "platform" and the block of that platform, remove the other blocks
+# ==============================================================================
+
+# [required] "local", "kvm" or "azure"
+platform = ""
+
+# local: VM created manually (e.g. VMware Workstation, 4 vCPU, 8 GiB), booted from the Talos ISO
+platform_local = {
+  ip        = ""          # [required] IP address of the VM
+  disk      = "/dev/sda"  # system disk device, default /dev/sda
+  lb_pool   = ""          # [required] LoadBalancer IP range, e.g. "192.168.1.200-192.168.1.219"
+  lb_subnet = ""          # [required] subnet of the range, e.g. "192.168.1.0/24"
+}
+
+# kvm: VM created on a KVM host via libvirt over ssh
+platform_kvm = {
+  host      = ""          # [required] KVM host name
+  user      = ""          # [required] ssh user on the KVM host
+  pool      = "default"   # libvirt storage pool for the disks, default "default"
+  network   = "default"   # libvirt network, default "default"
+  ip        = ""          # [required] IP address of the VM (DHCP reservation for mac)
+  mac       = ""          # [required] MAC address of the VM, e.g. "52:54:00:aa:bb:cc"
+  lb_pool   = ""          # [required] LoadBalancer IP range or CIDR
+  lb_subnet = ""          # [required] subnet of the range
+  vcpu      = 4           # CPUs, default 4 (2 is too little for the installation)
+  memory    = 8           # memory in GiB, default 8
+}
+
+# azure: Microsoft Azure (az CLI login required); demo_fqdn must resolve to the public IP
+# (output lb_public_ip of phase 1)
+platform_azure = {
+  subscription_id = ""                 # [required] Azure subscription ID
+  location        = ""                 # [required] Azure region, e.g. "switzerlandnorth"
+  vm_size         = "Standard_D4s_v5"  # VM size, default Standard_D4s_v5 (4 vCPU, 16 GiB)
+}
+
+# ==============================================================================
+# Kubernetes / ArgoCD
+# ==============================================================================
+
+# [required] Base repository that ArgoCD deploys from, e.g.
+# "https://github.com/airlock-presales/airlock-iam-demo-base-wip" or
+# "ssh://git@github.com/airlock-presales/airlock-iam-demo-base-wip"
+k8s_argocd_repo_url = ""
+
+# Credentials for an https repository URL that requires authentication (e.g. GitHub user and
+# personal access token with read access)
+k8s_argocd_repo_username = ""
+k8s_argocd_repo_password = ""
+
+# Private key for an ssh repository URL (heredoc for multiple lines, see airlock_iam_license)
+k8s_argocd_repo_ssh_key = ""
+
+# Credentials to pull the salesdemo images (argocd-cli, qr-service) from ghcr.io, as long as the
+# packages are not public: classic personal access token with scope read:packages
+# k8s_ghcr_pull = {
+#   username = ""
+#   token    = ""
+# }
+
+# ==============================================================================
+# Airlock
+# ==============================================================================
+
+# [required] Airlock IAM license, heredoc for multiple lines:
+# airlock_iam_license = <<EOT
+# ...
+# EOT
+airlock_iam_license = ""
+
+# [required] Airlock Microgateway license (heredoc as above)
+airlock_mgw_license = ""
+
+# [required] Credentials to pull the Airlock IAM image from quay.io
+airlock_iam_pull_username = ""
+airlock_iam_pull_password = ""
+
+# Copy the deployed IAM configuration (iam/iam-config.yaml) into IAM at start:
+# "changed" (default, when it changed since the last copy), "always", "never" (e.g. while
+# working in the Config Editor - get changes with 'make iam-config-pull')
+airlock_iam_config_sync = "changed"
+
+# [required] Futurae service for Airlock 2FA
+airlock_iam_futurae = {
+  service_id    = ""
+  auth_api_key  = ""
+  admin_api_key = ""
+}
+
+# [required] PXL Vision identity proofing (test environment)
+airlock_iam_pxl = {
+  api_key    = ""
+  account_id = ""
+}
+
+# SMTP server for emails sent by IAM; not set: emails are caught by Mailpit (https://<fqdn>/mailpit/)
+# airlock_iam_smtp = {
+#   host     = ""
+#   port     = 587          # default 587
+#   tls      = "starttls"   # "none", "starttls" (default) or "ssl"
+#   username = ""
+#   password = ""
+#   sender   = ""           # sender address, e.g. "iam@example.com"
+# }
+
+# OIDC client of this instance at an external OIDC provider (e.g. secure.ergon.ch), only for an
+# administrator login you add to your IAM configuration - not used by the configuration template.
+# In the configuration: client ID in DEMO_ADMIN_OIDC_CLIENT_ID, secret in
+# [FILE]/run/secrets/iam/admin-oidc-client-secret, redirect URI https://<demo_fqdn>/auth-login/ui/app/oauth2/client
+# airlock_iam_admin_oidc = {
+#   client_id     = ""
+#   client_secret = ""
+# }

@@ -1,0 +1,9 @@
+# sops: files are encrypted for these age public keys (age-keygen -y age.keys);
+# several people sharing the instance: comma-separated list of public keys
+creation_rules:
+  # instance settings
+  - path_regex: .*\.tfvars$
+    age: age1replace-with-your-public-key
+  # IAM database backup (make backup)
+  - path_regex: backup/.*
+    age: age1replace-with-your-public-key
