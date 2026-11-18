@@ -32,6 +32,14 @@ Gateway address (LoadBalancer IP), for name resolution on local platforms:
 ```
 kubectl -n airlock-gateway get svc
 ```
+The gateway gets the first address of `lb_pool` (CIDR: network address + 1, e.g. `10.1.2.129` for `10.1.2.128/29`; range: its first address).
+
+**Changing `lb_pool`:** `make apply-1` (the pool is an output of phase 1) and `make apply-3`, then recreate the gateway service once - PureLB assigns an address only to a new service and keeps the old one otherwise, even though the service already requests the new one (annotation `purelb.io/addresses`):
+```
+kubectl -n airlock-gateway delete svc airlock-gateway     # recreated by the Microgateway operator
+kubectl -n airlock-gateway get svc airlock-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}{"\n"}'
+```
+The gateway is unreachable for a few seconds. Then adjust the name resolution of `demo_fqdn` (hosts file, DNS) to the new address.
 
 ## Credentials
 
