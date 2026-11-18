@@ -1,6 +1,16 @@
 # Airlock IAM Salesdemo - instance
 
-This repository defines one instance of the Airlock IAM Salesdemo: a single VM with Talos Linux and Kubernetes, on which ArgoCD deploys Airlock IAM, Airlock Microgateway and the tools around them. The installation itself comes from the base repository [airlock-iam-demo-base-wip](https://github.com/airlock-presales/airlock-iam-demo-base-wip) (documentation in its `docs/`); this repository only holds what is specific to your instance.
+This repository defines one instance of the Airlock IAM Salesdemo: a single VM with Talos Linux and Kubernetes, on which ArgoCD deploys Airlock IAM, Airlock Microgateway and the tools around them. The installation itself comes from the base repository [airlock-iam-demo-base-wip](https://github.com/airlock-presales/airlock-iam-demo-base-wip), used like a library; this repository holds what is specific to your instance - and the documentation.
+
+## Documentation
+
+- [Workstation](docs/workstation.md) - tools required on the machine running the installation
+- [Instance](docs/instance.md) - deploy, important notes, all settings
+- Platforms - requirements and preparation: [local](docs/platform-local.md) (VM created manually, e.g. VMware Workstation), [kvm](docs/platform-kvm.md) (KVM host via libvirt), [azure](docs/platform-azure.md) (Microsoft Azure)
+- [Usage](docs/usage.md) - accessing the demo, administration, IAM configuration, troubleshooting
+- [Backup and restore](docs/backup.md) - what to back up, database backup, recovery of a lost instance
+- How the installation works (architecture, phases, repository structure): [base repository](https://github.com/airlock-presales/airlock-iam-demo-base-wip/tree/main/docs)
+
 
 | File | Content |
 |------|---------|
@@ -15,7 +25,7 @@ This repository defines one instance of the Airlock IAM Salesdemo: a single VM w
 
 ## Requirements
 
-Tools on your workstation: see `docs/workstation.md` of the base repository; preparation of your platform: `docs/platform-<platform>.md`.
+Tools on your workstation: [docs/workstation.md](docs/workstation.md); preparation of your platform: `docs/platform-<platform>.md`.
 
 ## Create your instance
 
@@ -65,4 +75,4 @@ or phase by phase with `make plan-<n>` / `make apply-<n>`, n = 1..3. Follow the 
 
 ## Backup
 
-The age key (kept outside the repository) and this repository, pushed with `state/`, `iam/` and `backup/`, are all that is needed to restore the instance: see `docs/backup.md` of the base repository. Never change or lose `sec_state_passphrase` and `sec_data_key`.
+The age key (kept outside the repository) and this repository, pushed with `state/`, `iam/` and `backup/`, are all that is needed to restore the instance: see [docs/backup.md](docs/backup.md). Never change or lose `sec_state_passphrase` and `sec_data_key`.
