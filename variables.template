@@ -24,10 +24,23 @@ demo_fqdn = ""
 # "internal" (default): certificate from the cluster-internal CA (browser warning, CA can be imported)
 # "letsencrypt": Let's Encrypt via HTTP-01 - requires public DNS for demo_fqdn and port 80
 # reachable from the internet
+# "provided": certificate and key below (e.g. from a company or public CA)
+# Browsers refuse passkeys on sites with certificate errors: with "internal", import the CA.
 tls_issuer = "internal"
 
 # E-mail address for the Let's Encrypt account (optional, only with tls_issuer = "letsencrypt")
 tls_acme_email = ""
+
+# tls_issuer = "provided": certificate for demo_fqdn followed by the intermediate chain, and its
+# private key (PEM); checked for expiry when applying (warning 30 days before)
+# tls_certificate = <<EOT
+# -----BEGIN CERTIFICATE-----
+# ...
+# EOT
+# tls_private_key = <<EOT
+# -----BEGIN PRIVATE KEY-----
+# ...
+# EOT
 
 # ==============================================================================
 # Secrets
