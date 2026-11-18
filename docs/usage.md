@@ -138,6 +138,8 @@ make apply-3             # optional: the active configuration is the same, IAM r
 
 Server-side texts (e.g. email templates, messages of the flows): `iam/<app>-texts/strings_<language>.properties` in the instance repository (e.g. `loginapp-texts`, `adminapp-texts`; Java properties, `key = value`). `make apply-3` deploys them with the configuration (configmap `iam-config`, IAM restarts on a change); `init-config` copies them into the instance (`<instance>/<app>-texts/`) at every start, independent of `airlock_iam_config_sync`, and removes files it copied earlier that are no longer in the repository.
 
+**Loginapp styling and UI texts** (Airlock IAM Loginapp Design Kit): `iam/airlock-iam-loginapp-rest-ui-customizations.zip`, created from the template of the base repository by `make init` (salesdemo styling in the Airlock colors, English UI texts e.g. for the portal groups). `make apply-3` deploys it with the configuration (configmap `iam-config`, max. ~750 KB); `init-config` copies it into the instance and sets `iam.loginapp.rest.ui.customizations` in `instance.properties` - without the file, IAM uses its default styling. Own styling: build a zip with the design kit (special download matching the IAM version; the salesdemo sources are in `designkit/src` of the base repository, `make designkit-dev` / `make designkit` there) and replace the file in `iam/`.
+
 The configuration relies on the deployment (keep it when changing the configuration):
 - secrets mounted as files: `/run/secrets/iam/` (secret `iam-credentials`: credentials of external services, OIDC client secrets, keys), `/run/secrets/iam-db/`,
 - environment variables `DEMO_*` (statefulset `iam`), e.g. `DEMO_FQDN`, `DEMO_OIDC_ISSUER`, `DEMO_FUTURAE_SERVICE_ID`,
