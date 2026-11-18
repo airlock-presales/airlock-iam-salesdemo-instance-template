@@ -2,3 +2,5 @@
 /age.keys
 /output
 /.tofu
+# safety copies OpenTofu writes on each apply - previous versions are in the git history
+state/*.backup
