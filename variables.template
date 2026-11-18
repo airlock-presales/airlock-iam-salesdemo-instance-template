@@ -103,6 +103,8 @@ platform_kvm = {
   network   = "default"   # libvirt network, default "default"
   ip        = ""          # [required] IP address of the VM (DHCP reservation for mac)
   mac       = ""          # [required] MAC address of the VM, e.g. "52:54:00:aa:bb:cc"
+  dhcp_reservation = true # reservation mac -> ip created in the libvirt-managed network; false for a
+                          # bridged network (reservation in its DHCP server, see docs/platform-kvm.md)
   lb_pool   = ""          # [required] LoadBalancer IP range or CIDR
   lb_subnet = ""          # [required] subnet of the range
   vcpu      = 4           # CPUs, default 4 (2 is too little for the installation)
