@@ -78,7 +78,7 @@ Self-services (portal `https://<fqdn>/auth-login/ui/app/protected/portal`, after
 | passkeys: remove | Airlock 2FA or passkey (required) |
 | Airlock 2FA: activate new device, rename | - |
 | Airlock 2FA: delete device | Airlock 2FA or passkey (required) |
-| Airlock 2FA: recovery information (new phone, from backup - handled by Futurae, not by IAM) | - |
+| Airlock 2FA: recovery information (new phone, from backup - handled by Futurae, not by IAM); only with the setting `airlock_iam_airlock2fa_recovery_info` (requires the account recovery feature activated in the Futurae service) | - |
 | OATH OTP: register (replaces an existing token) | - |
 | email OTP: enable / disable | disable: Airlock 2FA or passkey (required) |
 | Remember-Me devices | - |
