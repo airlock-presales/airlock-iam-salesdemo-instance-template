@@ -166,7 +166,7 @@ airlock_iam_pull_password = ""
 airlock_iam_config_sync = "changed"
 
 # Users allowed to restore the deployed IAM configuration from the portal (entry "Restore IAM
-# configuration"); they also need role superadmin or demo-admin and a second factor.
+# configuration"); they also need role superadmin or realm role mgr-admins and a second factor.
 # Empty (default): all such administrators, e.g. ["admin"] to restrict it
 airlock_iam_config_restore_users = []
 
