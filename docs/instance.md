@@ -47,7 +47,8 @@ Self-registering users name a responsible administrator by email address; the ad
 - a value for company (context data `company`) - self-registered users of this administrator are assigned to realm `users-<company>` (in realm names, spaces become `-`, other characters than letters, digits, `-`, `_` become `_`, max. 44 characters; e.g. `Big Oil & Gas AG` → `users-Big-Oil-_-Gas-AG`),
 - realm `partners`,
 - role `partner-admin` (found as responsible administrator; portal entries Adminapp and Mailpit),
-- realm role `adm-<company>` (company normalized as above, sub-role of `mgr-users`) - with a delegation to realm `users-<company>` (user management, passwords, Airlock 2FA activation and OATH secrets; see [usage](usage.md#administrator-access)), created by an administrator with `superadmin` or `realmadmin` in the Adminapp (*Realm Management*) if it doesn't exist yet.
+- realm role `adm-<company>` (company normalized as above, sub-role of `mgr-users`) - with a delegation to realm `users-<company>` (user management, passwords, Airlock 2FA activation and OATH secrets; see [usage](usage.md#administrator-access)), created by an administrator with `superadmin` or `realmadmin` in the Adminapp (*Realm Management*) if it doesn't exist yet,
+- a delegation of realm role `mgr-users` to realm `users-<company>` (same permissions as its delegation to `orphans`; a parent role does not get the permissions of its sub-roles' delegations) - create it before the one of `adm-<company>`.
 
 ## Settings reference
 
