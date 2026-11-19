@@ -77,6 +77,7 @@ Required settings are marked *.
 | `airlock_iam_license`, `airlock_mgw_license` | Airlock licenses (heredoc `<<EOT ... EOT` for multiple lines) |
 | `airlock_iam_pull_username`, `airlock_iam_pull_password` | credentials to pull the Airlock IAM image from quay.io |
 | `airlock_iam_config_sync` | copy the deployed IAM configuration into the instance: `changed` (default, when the deployed configuration changed), `always` (on every IAM start), `never` (e.g. while working in the Config Editor); see [usage](usage.md#iam-configuration) |
+| `airlock_iam_config_restore_users` | users allowed to restore the deployed IAM configuration from the portal (entry *Restore IAM configuration*; they also need role `superadmin` or `demo-admin` and a second factor); empty (default): all such administrators |
 | `airlock_iam_admin_oidc` | optional OIDC client at an external OIDC provider (e.g. secure.ergon.ch) for an administrator login added to the IAM configuration: `{ client_id = "...", client_secret = "..." }`; not used by the configuration template, see [usage](usage.md#administrator-access) |
 | `airlock_iam_futurae` * | Futurae service for Airlock 2FA: `{ service_id = "...", auth_api_key = "...", admin_api_key = "..." }` |
 | `airlock_iam_pxl` * | PXL Vision identity proofing (test environment): `{ api_key = "...", account_id = "..." }` |

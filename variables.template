@@ -165,6 +165,11 @@ airlock_iam_pull_password = ""
 # working in the Config Editor - get changes with 'make iam-config-pull')
 airlock_iam_config_sync = "changed"
 
+# Users allowed to restore the deployed IAM configuration from the portal (entry "Restore IAM
+# configuration"); they also need role superadmin or demo-admin and a second factor.
+# Empty (default): all such administrators, e.g. ["admin"] to restrict it
+airlock_iam_config_restore_users = []
+
 # [required] Futurae service for Airlock 2FA
 airlock_iam_futurae = {
   service_id    = ""

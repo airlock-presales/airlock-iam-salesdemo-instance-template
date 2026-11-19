@@ -127,6 +127,8 @@ The IAM configuration belongs to the instance: `iam/iam-config.yaml` in the inst
 - `always`: on every start.
 - `never`: never; use while working in the Config Editor.
 
+**Restore the deployed configuration** (portal, group *IAM administration*, entry *Restore IAM configuration*): replaces the active configuration with the deployed one (configmap `iam-config`, i.e. `iam/iam-config.yaml` of the instance repository at the last `make apply-3`) - e.g. after experiments in the Config Editor. Only for users listed in `airlock_iam_config_restore_users` (empty, the default: all users) with role `superadmin` or `demo-admin` and a second factor (passkey or Airlock 2FA); a confirmation page comes first. IAM activates the restored configuration automatically and keeps the replaced one in its activation history (`.activated-configs/`). Changes made in the Config Editor that should be kept: `make iam-config-pull` first.
+
 A replaced configuration is kept in the instance directory as `iam-config.yaml.<timestamp>` (the 2 newest; IAM itself keeps the 20 newest activated configurations per application in `.activated-configs/`).
 
 **Config Editor after a deployment:** activating in the Config Editor writes the whole configuration it shows. If it still shows the state from before a `make apply-3` (e.g. an open Config Editor, whose state survives IAM restarts in the session), activating overwrites the deployed configuration with the old one. Reload the Config Editor after a deployment before activating anything. To keep changes made in the Config Editor:
