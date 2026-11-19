@@ -193,8 +193,9 @@ airlock_iam_pxl = {
 #   sender   = ""           # sender address, e.g. "iam@example.com"
 # }
 
-# OIDC client of this instance at an external OIDC provider (e.g. secure.ergon.ch), only for an
-# administrator login you add to your IAM configuration - not used by the configuration template.
+# OIDC client of this instance at an external OIDC provider (e.g. secure.ergon.ch) for the partner
+# administrator onboarding - the configuration template contains the flow, but not the OIDC client
+# and the login button (add them to your IAM configuration, see docs/usage.md).
 # In the configuration: client ID in DEMO_ADMIN_OIDC_CLIENT_ID, secret in
 # [FILE]/run/secrets/iam/admin-oidc-client-secret, redirect URI https://<demo_fqdn>/auth-login/ui/app/oauth2/client
 # airlock_iam_admin_oidc = {
