@@ -19,6 +19,7 @@ This repository defines one instance of the Airlock IAM Salesdemo: a single VM w
 | `release` | release of the base repository to deploy: git tag or branch (`main`) |
 | `Makefile` | `make` targets, run `make` for a list |
 | `.sops.yaml` | age public keys for the encryption |
+| `.gitattributes` | instance files kept on template updates (see [Keeping your instance up to date](#keeping-your-instance-up-to-date)) |
 | `iam/` | IAM configuration and server-side texts - created by `make init` from the base repository, then yours to change |
 | `state/` | OpenTofu state, encrypted with `sec_state_passphrase` - created by `make build` |
 | `backup/` | IAM database backup, encrypted with sops/age - created by `make backup` |
@@ -29,7 +30,16 @@ Tools on your workstation: [docs/workstation.md](docs/workstation.md); preparati
 
 ## Create your instance
 
-1. Create your own (private) repository from this template and clone it.
+1. Create your own (private, empty) repository, e.g. on GitHub without README. Clone this template and push it there - the template stays connected as remote `template`, so you can merge its updates later (see [Keeping your instance up to date](#keeping-your-instance-up-to-date)):
+   ```
+   git clone https://github.com/airlock-presales/airlock-iam-salesdemo-instance-template.git my-instance
+   cd my-instance
+   git remote rename origin template
+   git remote add origin <URL of your repository>
+   git push -u origin main
+   git config merge.ours.driver true
+   ```
+   Don't use GitHub's "Use this template" button: it creates a repository with a new, unrelated history, and merging template updates later becomes difficult.
 2. Create an age key and keep it safe (e.g. password manager) - it is not committed. Without it, nothing in this repository can be decrypted.
    ```
    age-keygen -o age.keys
@@ -71,7 +81,26 @@ or phase by phase with `make plan-<n>` / `make apply-<n>`, n = 1..3. Follow the 
 | back up the IAM database | `make backup` (`COMMIT=1` or `PUSH=1` to commit/push) |
 | restore the IAM database | `make restore` |
 | update to a newer release | `make backup`, change `release`, `make init`, `make build`; existing files in `iam/` are not replaced - merge changes of the new template (`salesdemo/iam/`) manually |
+| get updates of this template (docs, Makefile, settings template) | `git fetch template`, `git merge template/main`, see [below](#keeping-your-instance-up-to-date) |
 | remove the instance | `make remove` |
+
+## Keeping your instance up to date
+
+Your repository shares its history with this template (remote `template`, see [Create your instance](#create-your-instance)). Get its updates by merging:
+
+```
+git fetch template
+git log --oneline main..template/main     # what changed in the template
+git merge template/main                   # resolve conflicts, if any
+git push
+```
+
+- Files with instance content that also exist in the template - `variables.auto.tfvars`, `.sops.yaml`, `release` - keep your version when both sides changed them (`.gitattributes`, merge driver `ours`). The driver is a local git setting: run `git config merge.ours.driver true` once in every clone, otherwise such files show up as conflicts.
+- Everything else (Makefile, docs, `variables.template`) comes from the template; if you changed one of these files too, git merges both or reports a conflict to resolve.
+- After the merge, compare `variables.template` with your settings (`sops edit variables.auto.tfvars`) for new keys, and run `make init` if the Makefile changed.
+- `iam/` is not part of the template: a newer base release brings a newer IAM configuration template (`salesdemo/iam/` after `make init`), which you merge into `iam/` manually (see "update to a newer release" above).
+
+**Repository created with "Use this template", or older instances:** the histories are unrelated. Add the remote (`git remote add template https://github.com/airlock-presales/airlock-iam-salesdemo-instance-template.git`), set the merge driver, and merge once with `git merge --allow-unrelated-histories template/main` - resolve the conflicts (usually: keep your instance files, take the template's docs and Makefile). After that, updates merge normally.
 
 ## Backup
 

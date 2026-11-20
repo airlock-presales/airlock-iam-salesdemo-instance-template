@@ -1,0 +1,6 @@
+# Instance files that also exist in the template: when the template and your instance both changed
+# them, a merge of template updates keeps your version (merge driver "ours"; enable it once per
+# clone: git config merge.ours.driver true). See README.md, "Keeping your instance up to date".
+variables.auto.tfvars merge=ours
+.sops.yaml            merge=ours
+release               merge=ours
