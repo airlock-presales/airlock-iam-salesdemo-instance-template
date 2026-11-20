@@ -66,7 +66,7 @@ Demo application: `https://<fqdn>/auth-login/` (also `https://<fqdn>/`).
 - **Login with password**: then the second factor according to the user's preferred login method (context data `auth_method`, also shown in the Adminapp):
   - `FIDO`, `AIRLOCK_2FA`, `OATH_OTP`, `EMAILOTP`: that factor is used directly (if it is still registered, otherwise as if empty);
   - `PASSWORD`: no second factor;
-  - empty: the user selects one of the registered second factors (with only one, it is used directly); users without a second factor are offered to register one (passkey, Airlock 2FA, OATH OTP, email OTP) - the registered factor becomes the preferred one, "skip" sets `PASSWORD`. Self-registration sets the registered factor too; skipping there leaves it empty, so the first login asks again.
+  - empty: the user selects one of the registered second factors or "password only" (no second factor, sets `PASSWORD`); users without a second factor are offered to register one (passkey, Airlock 2FA, OATH OTP, email OTP) - the registered factor becomes the preferred one, "skip" sets `PASSWORD`. Self-registration sets the registered factor too; skipping there leaves it empty, so the first login asks again.
   
   Administrator applications (Adminapp, tools, configuration restore) accept only a passkey or Airlock 2FA: the preferred one of these is used directly, otherwise the user chooses between them.
 - **Email OTP** is opt-in: available only once enabled by the user (registration or login), stored in `medusa_user.email_otp_enabled`.
