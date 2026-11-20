@@ -63,7 +63,12 @@ Demo application: `https://<fqdn>/auth-login/` (also `https://<fqdn>/`).
   Registration is controlled: new users stay locked until an administrator unlocks them in the Adminapp. The flow looks up the responsible administrator (user with the entered email address and role `partner-admin`) through the Adminapp REST API (Lua `ScriptableStep`, technical administrator `selfreg-lookup` in `medusa_admin`, roles `superadmin` and realm roles `mgr-partners,mgr-users`, created by `init-db`; password from OpenTofu, reset at every IAM start). If found, the user gets the realm `users-<company>` (context data `company` of the administrator, normalized for the realm name: spaces become `-`, other characters than letters, digits, `-`, `_` become `_`, max. 44 characters; partner administrators manage it through the realm role `adm-<company>`; without company: `orphans`) and the administrator an email; if not, the user gets realm `orphans` and the marker role `registration-orphan` (may be deleted). Either way, the user sees the same message. The entered address is stored in `medusa_user.responsible_admin` (Adminapp user detail page).
 - **Login with passkey**: passwordless on the login page, no second factor.
 - **Login without keyboard** (button on the login page, application `usernameless`): QR code scanned with the Airlock 2FA app, no username - counts as weak authentication only (like a password, not as Airlock 2FA second factor); the portal opens, applications requiring a second factor (Adminapp, tools) ask for it.
-- **Login with password**: then the user selects one of the registered second factors (passkey, Airlock 2FA, OATH OTP, email OTP); with only one factor, it is used directly. Users without a second factor are offered to register one (passkey, Airlock 2FA, OATH OTP, email OTP) or to continue with password only.
+- **Login with password**: then the second factor according to the user's preferred login method (context data `auth_method`, also shown in the Adminapp):
+  - `FIDO`, `AIRLOCK_2FA`, `OATH_OTP`, `EMAILOTP`: that factor is used directly (if it is still registered, otherwise as if empty);
+  - `PASSWORD`: no second factor;
+  - empty: the user selects one of the registered second factors (with only one, it is used directly); users without a second factor are offered to register one (passkey, Airlock 2FA, OATH OTP, email OTP) - the registered factor becomes the preferred one, "skip" sets `PASSWORD`. Self-registration sets the registered factor too; skipping there leaves it empty, so the first login asks again.
+  
+  Administrator applications (Adminapp, tools, configuration restore) accept only a passkey or Airlock 2FA: the preferred one of these is used directly, otherwise the user chooses between them.
 - **Email OTP** is opt-in: available only once enabled by the user (registration or login), stored in `medusa_user.email_otp_enabled`.
 - Emails (verification codes, OTPs) are caught by Mailpit unless an SMTP server is set.
 
@@ -82,6 +87,7 @@ Self-services (portal `https://<fqdn>/auth-login/ui/app/protected/portal`, after
 | OATH OTP: register (replaces an existing token) | - |
 | email OTP: enable / disable | disable: Airlock 2FA or passkey (required) |
 | Remember-Me devices | - |
+| preferred login method (only with a second factor): one of the registered factors, password only, or no preference (choose at every login); "keep current setting" instead of a cancel button | - |
 
 Recovery:
 - **Forgotten password** (link on the login page): user identification, code sent by email, approval with a registered second factor (Airlock 2FA, passkey, OATH OTP; none if the user has no such factor), new password.
