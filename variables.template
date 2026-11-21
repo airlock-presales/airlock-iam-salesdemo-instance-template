@@ -170,6 +170,10 @@ airlock_iam_config_sync = "changed"
 # Empty (default): all such administrators, e.g. ["admin"] to restrict it
 airlock_iam_config_restore_users = []
 
+# IAM configuration snippets (iam/snippets/<file>) imported into iam/iam-config.yaml at deployment,
+# in this order - add-ons kept separate from the main configuration, see docs/usage.md
+airlock_iam_config_snippets = []
+
 # Portal entry with instructions for recovering Airlock 2FA accounts on a new phone from a backup;
 # enable only if the account recovery feature is activated in your Futurae service
 airlock_iam_airlock2fa_recovery_info = false

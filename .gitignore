@@ -4,3 +4,5 @@
 /.tofu
 # safety copies OpenTofu writes on each apply - previous versions are in the git history
 state/*.backup
+# active IAM configuration with snippets (make iam-config-pull), compare manually - not committed
+iam/iam-config.active.yaml

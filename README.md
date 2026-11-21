@@ -20,7 +20,7 @@ This repository defines one instance of the Airlock IAM Salesdemo: a single VM w
 | `Makefile` | `make` targets, run `make` for a list |
 | `.sops.yaml` | age public keys for the encryption |
 | `.gitattributes` | instance files kept on template updates (see [Keeping your instance up to date](#keeping-your-instance-up-to-date)) |
-| `iam/` | IAM configuration and server-side texts - created by `make init` from the base repository, then yours to change |
+| `iam/` | IAM configuration and server-side texts - created by `make init` from the base repository, then yours to change; `iam/snippets/`: optional configuration snippets (setting `airlock_iam_config_snippets`) |
 | `state/` | OpenTofu state, encrypted with `sec_state_passphrase` - created by `make build` |
 | `backup/` | IAM database backup, encrypted with sops/age - created by `make backup` |
 
