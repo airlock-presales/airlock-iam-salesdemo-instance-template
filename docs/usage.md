@@ -95,9 +95,11 @@ Recovery:
 - **Lost second factor** (button "Recover account" on the login page): password and a code sent to the primary email address, then confirmations that give points until 25 are reached (current total shown after each confirmation):
   - known browser (the user logged in on this device before): 10 points, automatic;
   - code to the alternate email address (self-service *Alternate email address*, context data `email_alt`): 8 points;
+  - code via an administrator: a code is emailed to the user's contacts, who pass it on (e.g. after a phone call): 12 points; a wrong code can be retried with a new code in the next round;
+  - confirmation by an administrator: the contacts get an email with a code and confirm within 15 minutes in the portal (*Confirm account recovery*, group *IAM administration*); the user's page waits up to 20 seconds and offers "check again": 20 points;
   - examples that are not available in the demo (0 points): small transfer to the bank account (30), code at a cash machine (50), code on the account statement (24).
 
-  With 25 points, all second factors are deleted (Airlock 2FA account, passkeys, OATH OTP tokens, email OTP opt-in), the user registers a new one (it becomes the preferred login method) and gets an email (primary and alternate address). Without enough points: a message to contact the helpdesk. Locked (deactivated) users see the same code page, but no email is sent. More confirmations follow (codes and confirmations via administrators, SMS, waiting period, ID document).
+  With 25 points, all second factors are deleted (Airlock 2FA account, passkeys, OATH OTP tokens, email OTP opt-in), the user registers a new one (it becomes the preferred login method) and gets an email (primary and alternate address). Without enough points: a message to contact the helpdesk. Locked (deactivated) users see the same code page, but no email is sent. Contacts: the partner administrators of the user's realm (self-registered users with a responsible administrator), otherwise administrators with realm role `mgr-partners` (for partner administrators) or `mgr-admins`; all of them are notified by email. Users of realm `orphans` see these options too, but nobody is asked. Airlock 2FA push notifications can't be sent to contacts (IAM sends them only to the devices of the user of the event). More confirmations follow (SMS, waiting period, ID document).
 - **Helpdesk**: administrators remove a user's factors in the Adminapp.
 
 ## Administrator access
