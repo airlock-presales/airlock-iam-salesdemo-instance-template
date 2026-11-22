@@ -146,7 +146,7 @@ Realms: `owners` (the instance owner's administrators), `partners` (partner admi
 
 The IAM configuration belongs to the instance: `iam/iam-config.yaml` in the instance repository. `make init` creates the files of `iam/` (configuration, server-side texts) from the template of the base repository (`iam/`) if they don't exist; afterwards they are never overwritten - a newer template of a later release has to be merged manually (e.g. `diff -r salesdemo/iam iam`).
 
-`make apply-3` deploys it: OpenTofu replaces the placeholder `@@FQDN@@` (redirect URIs of the OIDC clients - string lists can't use environment variables) and stores it in the configmap `iam/iam-config`; its hash is a pod annotation of IAM, so IAM restarts when the configuration changed. At IAM start, the init container `init-config` copies it into the instance, depending on the setting `airlock_iam_config_sync`:
+`make apply-3` deploys it: OpenTofu replaces the placeholder `@@FQDN@@` (redirect URIs of the OIDC clients - string lists can't use environment variables) and stores it in the configmap `iam/iam-config` (compressed - a configmap holds at most 1 MiB; the init container `init-unpack` unpacks it); its hash is a pod annotation of IAM, so IAM restarts when the configuration changed. At IAM start, the init container `init-config` copies it into the instance, depending on the setting `airlock_iam_config_sync`:
 
 - `changed` (default): only if the deployed configuration changed since the last copy. Changes made in the Config Editor survive restarts until the deployed configuration changes.
 - `always`: on every start.
