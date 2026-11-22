@@ -93,7 +93,7 @@ Self-services (portal `https://<fqdn>/auth-login/ui/app/protected/portal`, after
 
 Recovery:
 - **Forgotten password** (link on the login page): user identification, code sent by email, approval with a registered second factor (Airlock 2FA, passkey, OATH OTP; none if the user has no such factor), new password.
-- **Lost second factor** (button "Recover account" on the login page): password and a code sent to the primary email address, then confirmations that give points until 25 are reached (the selection page shows the current total):
+- **Lost second factor** (button "Recover second factor" on the login page): password and a code sent to the primary email address, then confirmations that give points until 25 are reached (the selection page shows the current total):
   - known browser (the user logged in on this device before): 10 points, automatic;
   - code to the alternate email address (self-service *Alternate email address*, context data `email_alt`): 8 points;
   - SMS code to the mobile number (self-service *Mobile number*, context data `mtan_number`): 1 point - only with SMS switched on (an SMS snippet, see below);
