@@ -212,9 +212,10 @@ airlock_iam_pxl = {
 # }
 
 # Optional TrueSenses SMS gateway account, for an IAM snippet with a TrueSensesSmsGateway (the configuration
-# template sends no SMS). In the snippet: username in DEMO_TRUESENSES_USERNAME, password in
-# [FILE]/run/secrets/iam/truesenses-password
+# template sends no SMS). In the snippet: username in DEMO_TRUESENSES_USERNAME, service URI in
+# DEMO_TRUESENSES_SERVICE_URI, password in [FILE]/run/secrets/iam/truesenses-password
 # airlock_iam_sms_truesenses = {
-#   username = ""
-#   password = ""
+#   username    = ""
+#   password    = ""
+#   service_uri = "https://truesenses.com/cgi-bin/smsgateway.cgi"   # optional, this is the default
 # }
