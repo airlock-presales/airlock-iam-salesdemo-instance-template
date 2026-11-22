@@ -210,3 +210,11 @@ airlock_iam_pxl = {
 #   client_id     = ""
 #   client_secret = ""
 # }
+
+# Optional TrueSenses SMS gateway account, for an IAM snippet with a TrueSensesSmsGateway (the configuration
+# template sends no SMS). In the snippet: username in DEMO_TRUESENSES_USERNAME, password in
+# [FILE]/run/secrets/iam/truesenses-password
+# airlock_iam_sms_truesenses = {
+#   username = ""
+#   password = ""
+# }
