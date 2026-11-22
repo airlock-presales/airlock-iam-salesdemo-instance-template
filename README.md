@@ -78,6 +78,7 @@ or phase by phase with `make plan-<n>` / `make apply-<n>`, n = 1..3. Follow the 
 |------|---------|
 | change settings | `sops edit variables.auto.tfvars`, then `make apply-3` (or the phase concerned) |
 | change the IAM configuration | edit `iam/iam-config.yaml` (or in the Config Editor, then `make iam-config-pull`), commit, `make apply-3` |
+| make ArgoCD pick up changes now | `make refresh` (hard refresh of all applications; `make apply-3` does it automatically) |
 | back up the IAM database | `make backup` (`COMMIT=1` or `PUSH=1` to commit/push) |
 | restore the IAM database | `make restore` |
 | update to a newer release | `make backup`, change `release`, `make init`, `make build`; existing files in `iam/` are not replaced - merge changes of the new template (`salesdemo/iam/`) manually |

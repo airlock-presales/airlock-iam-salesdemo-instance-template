@@ -21,7 +21,8 @@ all:
 	@echo "  remove       Remove Airlock IAM Salesdemo: destroy the VM (phase 1), drop the state of phases 2, 3"
 	@echo "               Also removes leftovers of a lost instance; asks for confirmation"
 	@echo "  plan-<n>     Show changes for phase n (1..3)"
-	@echo "  apply-<n>    Apply changes for phase n (1..3)"
+	@echo "  apply-<n>    Apply changes for phase n (1..3); apply-3 then asks ArgoCD to refresh at once"
+	@echo "  refresh      ArgoCD: render all applications now (instead of at the next reconciliation)"
 	@echo "  backup       Back up the IAM database to backup/ (encrypted); COMMIT=1 or PUSH=1 to commit/push"
 	@echo "  restore      Restore the IAM database from backup/ (IAM is stopped meanwhile)"
 	@echo "  iam-config-pull  Copy the active IAM configuration (e.g. Config Editor changes) to iam/"
@@ -72,6 +73,15 @@ plan-%: check
 
 apply-%: check
 	$(TOFUWRAP) $* apply
+	$(if $(filter 3,$*),@$(MAKE) --no-print-directory refresh)
+
+# ArgoCD notices changed settings/configmaps only at its next reconciliation (120 s + jitter); a hard
+# refresh renders all applications now (IAM then restarts within about a minute, once the repo server
+# sees the new project settings)
+.PHONY: refresh
+refresh:
+	@test -f output/kubeconfig.yaml || { echo "output/kubeconfig.yaml not found - phase 2 not applied?"; exit 1; }
+	KUBECONFIG=output/kubeconfig.yaml kubectl -n argocd annotate applications --all argocd.argoproj.io/refresh=hard --overwrite
 
 .PHONY: backup
 backup: check
