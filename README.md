@@ -22,6 +22,7 @@ This repository defines one instance of the Airlock IAM Salesdemo: a single VM w
 | `.gitattributes` | instance files kept on template updates (see [Keeping your instance up to date](#keeping-your-instance-up-to-date)) |
 | `iam/` | IAM configuration and server-side texts - created by `make init` from the base repository, then yours to change; `iam/snippets/`: optional configuration snippets (setting `airlock_iam_config_snippets`) |
 | `state/` | OpenTofu state, encrypted with `sec_state_passphrase` - created by `make build` |
+| `locks/` | OpenTofu provider lock files (`.terraform.lock.hcl`) per phase - created by `make init`, commit them; they pin the provider versions and checksums of this instance |
 | `backup/` | IAM database backup, encrypted with sops/age - created by `make backup` |
 
 ## Requirements
@@ -81,7 +82,7 @@ or phase by phase with `make plan-<n>` / `make apply-<n>`, n = 1..3. Follow the 
 | make ArgoCD pick up changes now | `make refresh` (hard refresh of all applications; `make apply-3` does it automatically) |
 | back up the IAM database | `make backup` (`COMMIT=1` or `PUSH=1` to commit/push) |
 | restore the IAM database | `make restore` |
-| update to a newer release | `make backup`, change `release`, `make init`, `make build`; existing files in `iam/` are not replaced - merge changes of the new template (`salesdemo/iam/`) manually |
+| update to a newer release | `make backup`, change `release`, `make init`, `make build`; existing files in `iam/` are not replaced - merge changes of the new template (`salesdemo/iam/`) manually. If `make init` reports that a provider does not match the lock file (the new release requires another version): `salesdemo/bin/tofuwrap <phase> init -upgrade`, commit `locks/` |
 | get updates of this template (docs, Makefile, settings template) | `git fetch template`, `git merge template/main`, see [below](#keeping-your-instance-up-to-date) |
 | remove the instance | `make remove` |
 
