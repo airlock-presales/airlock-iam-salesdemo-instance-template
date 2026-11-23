@@ -45,9 +45,9 @@ tls_issuer   = "letsencrypt"      # once DNS is in place, see below
 
 ## Costs
 
-The VM, two Premium SSD disks (40 + 10 GiB) and two static public IPs are billed while they exist. To save costs when the demo is not needed, deallocate the VM (disks and IPs are still billed):
+The VM, two Premium SSD disks (40 + 10 GiB) and two static public IPs are billed while they exist. To save costs when the demo is not needed, deallocate the VM (disks and IPs are still billed, the demo keeps its addresses):
 ```
-az vm deallocate -g salesdemo-<demo_name> -n <demo_name>-controlplane-0
-az vm start      -g salesdemo-<demo_name> -n <demo_name>-controlplane-0
+make stop     # shuts Talos down cleanly (talosctl shutdown), then deallocates the VM
+make start    # starts the VM, waits until the Kubernetes node is ready
 ```
-`make remove` deletes everything.
+Both need the Azure CLI, logged in. After `make start`, IAM and the other applications need a few more minutes (ArgoCD shows the state). `make remove` deletes everything.

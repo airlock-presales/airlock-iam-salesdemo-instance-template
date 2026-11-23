@@ -11,6 +11,7 @@ RELEASE   := $(shell tr -d '[:space:]' < release)
 TOFUWRAP  := $(SALESDEMO)/bin/tofuwrap
 IAMDB     := $(SALESDEMO)/bin/iamdb
 IAMCONFIG := SALESDEMO=$(SALESDEMO) $(SALESDEMO)/bin/iamconfig
+VMPOWER   := $(SALESDEMO)/bin/vmpower
 
 all:
 	@echo "Targets"
@@ -23,6 +24,8 @@ all:
 	@echo "  plan-<n>     Show changes for phase n (1..3)"
 	@echo "  apply-<n>    Apply changes for phase n (1..3); apply-3 then asks ArgoCD to refresh at once"
 	@echo "  refresh      ArgoCD: render all applications now (instead of at the next reconciliation)"
+	@echo "  stop         Azure: shut Talos down and deallocate the VM (no compute costs; disks, IPs kept)"
+	@echo "  start        Azure: start the VM, wait until the Kubernetes node is ready"
 	@echo "  backup       Back up the IAM database to backup/ (encrypted); COMMIT=1 or PUSH=1 to commit/push"
 	@echo "  restore      Restore the IAM database from backup/ (IAM is stopped meanwhile)"
 	@echo "  iam-config-pull  Copy the active IAM configuration (e.g. Config Editor changes) to iam/"
@@ -82,6 +85,15 @@ apply-%: check
 refresh:
 	@test -f output/kubeconfig.yaml || { echo "output/kubeconfig.yaml not found - phase 2 not applied?"; exit 1; }
 	KUBECONFIG=output/kubeconfig.yaml kubectl -n argocd annotate applications --all argocd.argoproj.io/refresh=hard --overwrite
+
+# Azure only: deallocate / start the VM (bin/vmpower; Azure CLI logged in)
+.PHONY: stop
+stop: check
+	$(VMPOWER) stop
+
+.PHONY: start
+start: check
+	$(VMPOWER) start
 
 .PHONY: backup
 backup: check
