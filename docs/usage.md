@@ -56,7 +56,7 @@ The gateway is unreachable for a few seconds. Then adjust the name resolution of
 
 Demo application: `https://<fqdn>/auth-login/` (also `https://<fqdn>/`).
 
-- **Self-registration** ("Sign up" on the login page): username, email address (verified with a code), optional first and last name, then the email address of the responsible administrator, then the registration type:
+- **Self-registration** ("Register as user" on the login page): username, email address (verified with a code), optional first and last name, then the email address of the responsible administrator, then the registration type:
   - **Easy**: password, then optionally a second factor (Airlock 2FA, OATH OTP, email OTP, or none).
   - **Identity check (KYC)**: identity proofing with the ID document via PXL Vision (test environment): a link (on a smartphone) or a QR code to scan; afterwards "continue" - if the check is not completed yet, IAM waits up to 20 seconds, then offers to go back to the QR code. First and last name, document number and type and the issuing country (`country`, ISO alpha-3) are taken from the document (`idp_doc_number`, `idp_doc_type`; the birthdate is not stored - data minimization). Then password and optional second factor as above.
 
