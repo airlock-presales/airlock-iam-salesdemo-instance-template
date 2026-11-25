@@ -38,7 +38,7 @@ tls_issuer   = "letsencrypt"      # once DNS is in place, see below
 ## Steps
 
 1. `make init`, `make apply-1`: creates the resources (~10 minutes, mostly the image upload); note the output `lb_public_ip`
-2. DNS: A record `demo_fqdn` → `lb_public_ip`, or CNAME `demo_fqdn` → `lb_public_fqdn` (Azure DNS name `<dns_label>.<location>.cloudapp.azure.com`, setting `dns_label`, default `airlock-<demo_name>` - must be unique in the region, choose another one if `apply-1` reports it as taken). Without an own domain, `demo_fqdn` can be the Azure name itself
+2. DNS: A record `demo_fqdn` → `lb_public_ip`, or CNAME `demo_fqdn` → `lb_public_fqdn` (Azure DNS name `<dns_label>.<location>.cloudapp.azure.com`, setting `dns_label`, default `airlock-<demo_name>` - must be unique in the region; `plan-1` / `apply-1` check it before creating anything and stop with a message if it is taken). Without an own domain, `demo_fqdn` can be the Azure name itself
 3. `make apply-2`, `make apply-3`
 4. Let's Encrypt is used if `tls_issuer = "letsencrypt"`; the record from step 2 must resolve publicly before the gateway certificate is requested.
    With `internal`, the certificate is issued by the cluster CA (browser warning).
