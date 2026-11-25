@@ -42,13 +42,18 @@ Browsers refuse passkeys (WebAuthn) on a site whose certificate they don't trust
 
 ### Creating partner administrators manually
 
-Self-registering users name a responsible administrator by email address; the administrator activates them in the Adminapp. An administrator created manually (Adminapp) needs:
-- an email address (context data `email`) - matched with the address entered at the self-registration,
-- a value for company (context data `company`) - self-registered users of this administrator are assigned to realm `users-<company>` (in realm names, spaces become `-`, other characters than letters, digits, `-`, `_` become `_`, max. 44 characters; e.g. `Big Oil & Gas AG` → `users-Big-Oil-_-Gas-AG`),
-- realm `partners`,
-- role `partner-admin` (found as responsible administrator; portal entries Adminapp and Mailpit),
-- realm role `adm-<company>` (company normalized as above, sub-role of `mgr-users`) - with a delegation to realm `users-<company>` (user management, passwords, view tokens, Airlock 2FA activation and OATH secrets; see [usage](usage.md#administrator-access)), created by an administrator with `superadmin` or `realmadmin` in the Adminapp (*Realm Management*) if it doesn't exist yet,
-- a delegation of realm role `mgr-users` to realm `users-<company>` (same permissions as its delegation to `orphans`, in particular `editUserRealm` - moving a user requires it in the source and the target realm; a parent role does not get the permissions of its sub-roles' delegations) - create it before the one of `adm-<company>`.
+Self-registering users name a responsible administrator by email address; the administrator activates them in the Adminapp. Until the onboarding through the external OIDC provider is set up (see [usage](usage.md#administrator-access)), partner administrators are created manually in the Adminapp by an administrator with `superadmin` (users) and `superadmin` or `realmadmin` (*Realm Management*: realm roles, delegations).
+
+Steps 2-5 are needed once per company; further administrators of the same company only need steps 1 and 6. The onboarding flow creates the same objects - nothing to change when it is set up later.
+
+1. **Create the user** (*Users*): realm `partners`, context data `email` (matched with the address entered at the self-registration) and `company`, role `partner-admin` (found as responsible administrator; portal entries Adminapp and Mailpit).
+2. **Realm name** of the company's users: `users-<company>`, company normalized: spaces become `-`, characters other than letters, digits, `-`, `_` become `_`, max. 44 characters - e.g. `Big Oil & Gas AG` → `users-Big-Oil-_-Gas-AG`. Self-registered users of this administrator are assigned to it. Below, `<company>` is always the normalized value.
+3. **Delegation `mgr-users` → `users-<company>`** (*Realm Management*, first: a sub-role's delegation may be limited to its parent's permissions, and a parent role does not get the permissions of its sub-roles' delegations): `createUser`, `deletePassword`, `deleteUser`, `editUser` (fields `givenname`, `surname`, `country`, `company`, `email`, `language`), `editUserRealm` (moving a user requires it in the source and the target realm), `editUsername`, `generatePassword`, `listUsers`, `lockUser`, `triggerPasswordReset`, `unlockUser`, `viewContextData` (fields `givenname`, `surname`, `responsible_admin`, `email_alt`, `mtan_number`, `country`, `company`, `email`, `language`), `viewUser`, `viewUserLogs`.
+4. **Delegation `scripts` → `users-<company>`** - the Lua scripts (technical administrator `selfreg-lookup`, e.g. account recovery) work through the Adminapp REST API with it; without it, the account recovery of these users fails with `GET /users/<user>/roles failed (HTTP 403)`: `deleteToken`, `editUser` (field `recovery_confirmed_by`), `listUsers`, `manageAdminRoles`, `viewContextData` (fields `email`, `language`, `company`, `responsible_admin`, `mtan_number`, `recovery_request`, `recovery_request_until`, `recovery_confirmed_by`), `viewToken`, `viewUser`.
+5. **Realm role `adm-<company>`**, parent `mgr-users`, and its **delegation `adm-<company>` → `users-<company>`**: `createUser`, `deletePassword`, `deleteUser`, `editUser` (fields as in step 3), `editUsername`, `generatePassword`, `listUsers`, `lockUser`, `triggerPasswordReset`, `unlockUser`, `viewAirlock2FAActivationSecret`, `viewContextData` (fields as in step 3), `viewOathOtpTokenSecret`, `viewToken`, `viewUser`, `viewUserLogs`.
+6. **Assign realm role `adm-<company>`** to the user (*Users*, user detail).
+
+Check: the partner administrator logs in, opens the Adminapp from the portal and sees the users of realm `users-<company>` (after the first self-registration naming them); a factor recovery of such a user gets past the code step.
 
 ## Settings reference
 
