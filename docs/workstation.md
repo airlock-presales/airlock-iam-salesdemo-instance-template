@@ -11,7 +11,7 @@ Linux, macOS or Windows with WSL. Required tools:
 | zstd (`unzstd`) | | platform kvm: Talos disk image |
 | xz, [Azure CLI](https://learn.microsoft.com/cli/azure/install-azure-cli) (`az`) | | platform azure |
 | ssh | | platform kvm: libvirt connection |
-| [talosctl](https://www.talos.dev/) | optional | administration and troubleshooting |
+| [talosctl](https://www.talos.dev/) | required | first configuration of the node (phase 2), `make stop`/`start` (Azure), administration and troubleshooting |
 | kubectl | for `make backup`/`restore`, otherwise optional | IAM database backup, administration and troubleshooting |
 
 ## Installation examples (Linux)
