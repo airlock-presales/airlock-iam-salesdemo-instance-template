@@ -117,8 +117,11 @@ platform_azure = {
   subscription_id = ""                 # [required] Azure subscription ID
   location        = ""                 # [required] Azure region, e.g. "switzerlandnorth"
   vm_size         = "Standard_D4s_v5"  # VM size, default Standard_D4s_v5 (4 vCPU, 16 GiB)
-  # resource_group = ""                # resource group created by phase 1 (must not exist yet),
-                                       # default salesdemo-<demo name>; changing it recreates everything
+  # resource_group = ""                # resource group, default salesdemo-<demo name>; changing it
+                                       # recreates everything
+  # resource_group_existing = false    # false: phase 1 creates the group (must not exist yet);
+                                       # true: use the existing group resource_group (e.g. given by the
+                                       # subscription owner) - 'make remove' keeps it
 }
 
 # ==============================================================================

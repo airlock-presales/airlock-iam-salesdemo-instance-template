@@ -1,10 +1,10 @@
 # Platform azure - Microsoft Azure
 
-OpenTofu creates everything in a new resource group `salesdemo-<demo_name>` (setting `resource_group` to choose another name; it must not exist yet): network, security group, two public IPs, storage account with the Talos image, VM (`Standard_D4s_v5`, setting `vm_size`) with system and data disk.
+OpenTofu creates everything in a new resource group `salesdemo-<demo_name>` (setting `resource_group` to choose another name; it must not exist yet) or, with `resource_group_existing = true`, in the existing group `resource_group`: network, security group, two public IPs, storage account with the Talos image, VM (`Standard_D4s_v5`, setting `vm_size`) with system and data disk.
 
 ## Requirements
 
-- Azure subscription; your account needs permission to create resource groups and resources, e.g. role *Contributor* on the subscription
+- Azure subscription; your account needs permission to create resource groups and resources, e.g. role *Contributor* on the subscription - or, with an existing resource group (`resource_group_existing = true`), *Contributor* on that group. `make remove` then deletes the resources in the group, not the group itself; the resource providers `Microsoft.Compute`, `Microsoft.Network` and `Microsoft.Storage` must already be registered in the subscription (`az provider show -n <name> --query registrationState`)
 - vCPU quota for the DSv5 family in the chosen region (4 vCPU)
 - Azure CLI (`az`) and `xz` on the workstation, logged in:
   ```
