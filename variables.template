@@ -117,6 +117,9 @@ platform_azure = {
   subscription_id = ""                 # [required] Azure subscription ID
   location        = ""                 # [required] Azure region, e.g. "switzerlandnorth"
   vm_size         = "Standard_D4s_v5"  # VM size, default Standard_D4s_v5 (4 vCPU, 16 GiB)
+  # dns_label     = ""                 # DNS name of the demo public IP: <dns_label>.<location>.cloudapp.azure.com,
+                                       # default airlock-<demo_name>, "" for none - must be unique in the
+                                       # Azure region (across all customers)
   # resource_group = ""                # resource group, default salesdemo-<demo name>; changing it
                                        # recreates everything
   # resource_group_existing = false    # false: phase 1 creates the group (must not exist yet);

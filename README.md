@@ -56,7 +56,7 @@ Tools on your workstation: [docs/workstation.md](docs/workstation.md); preparati
    cat variables.template | sops encrypt --filename-override variables.auto.tfvars > variables.auto.tfvars
    sops edit variables.auto.tfvars
    ```
-   Fill in at least all keys marked `[required]`, keep the block of your platform and remove the other platform blocks; optional keys can be removed (defaults apply). The settings only exist encrypted in the repository; `make init` refuses to run if `variables.auto.tfvars` is not encrypted. Later changes: `sops edit variables.auto.tfvars`.
+   Fill in at least all keys marked `[required]`, keep the block of your platform and remove the other platform blocks; optional keys can be removed (defaults apply). Choose a distinctive `demo_name` (e.g. with your company name): on Azure it is also part of the default DNS name `airlock-<demo_name>.<region>.cloudapp.azure.com` of the demo, which must be unique in the Azure region across all Azure customers - `apply-1` fails if it is taken (then set `platform_azure.dns_label`). The settings only exist encrypted in the repository; `make init` refuses to run if `variables.auto.tfvars` is not encrypted. Later changes: `sops edit variables.auto.tfvars`.
 5. Initialise: checks out the base repository at `release` into `./salesdemo` (override with `SALESDEMO=<path>`), initialises OpenTofu and creates `iam/` (IAM configuration and server-side texts) from the template of the base repository
    ```
    make init
