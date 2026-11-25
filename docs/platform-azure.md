@@ -1,6 +1,6 @@
 # Platform azure - Microsoft Azure
 
-OpenTofu creates everything in a new resource group `salesdemo-<demo_name>`: network, security group, two public IPs, storage account with the Talos image, VM (`Standard_D4s_v5`, setting `vm_size`) with system and data disk.
+OpenTofu creates everything in a new resource group `salesdemo-<demo_name>` (setting `resource_group` to choose another name; it must not exist yet): network, security group, two public IPs, storage account with the Talos image, VM (`Standard_D4s_v5`, setting `vm_size`) with system and data disk.
 
 ## Requirements
 

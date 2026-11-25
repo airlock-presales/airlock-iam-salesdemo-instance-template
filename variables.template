@@ -117,6 +117,8 @@ platform_azure = {
   subscription_id = ""                 # [required] Azure subscription ID
   location        = ""                 # [required] Azure region, e.g. "switzerlandnorth"
   vm_size         = "Standard_D4s_v5"  # VM size, default Standard_D4s_v5 (4 vCPU, 16 GiB)
+  # resource_group = ""                # resource group created by phase 1 (must not exist yet),
+                                       # default salesdemo-<demo name>; changing it recreates everything
 }
 
 # ==============================================================================
