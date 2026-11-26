@@ -132,7 +132,7 @@ Created by the init container `init-db` at the first start (if missing), with th
 
 **Adminer** (`https://<fqdn>/adminer/`, portal entry *Adminer*): behind Microgateway (OIDC relying party, client `adminer`, flow `authFlow-adminTools`). Automatic login to database `iam` with the IAM database account (secret `adminer-db`): plugin [login-auth-proxy](https://github.com/omattsson/adminer-login-auth-proxy) (vendored, commit `efbef4c`), Microgateway sends the IAM username in a header with an unguessable name (`X-Auth-User-<random>`, OpenTofu, project settings `tools.adminer.auth_header`) - a client bypassing the gateway (e.g. a pod in the cluster) doesn't know the header name. Adminer's logout logs in again; log out with `https://<fqdn>/adminer/_oidc/logout`.
 
-**Session lifetimes**: Microgateway sessions 4h (SessionHandling `sessionagent`, idle timeout 10m), IAM Loginapp session 4h (`sessionLifetime`), refresh tokens of the authorization server `demo` 4h1m.
+**Session lifetimes**: Microgateway sessions 4h (SessionHandling `sessionagent`, idle timeout 1h), IAM Loginapp session 4h, idle timeout 1h (`sessionLifetime`, `sessionIdleTimeout`), Adminapp idle timeout 1h (lifetime: default 8h), refresh tokens of the authorization server `demo` 4h1m.
 
 **Realm administration**: `init-db` also creates realm roles and delegations (each only if missing; realms exist only through delegations and user assignments):
 
